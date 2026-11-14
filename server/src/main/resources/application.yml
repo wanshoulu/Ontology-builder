@@ -1,0 +1,198 @@
+# OntoMind 智能本体平台 - 主配置文件
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  # 增大请求头大小限制（避免 HTTP 431 错误，MD转图本体MD的systemPrompt较大）
+  max-http-header-size: 64KB
+  # Tomcat 请求大小限制（-1 表示不限制）
+  tomcat:
+    max-swallow-size: -1
+    max-http-form-post-size: -1
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
+  application:
+    name: ontologybuilder-server
+  profiles:
+    active: dev
+  # 异步请求超时（SSE 等长连接需要较长时间）
+  mvc:
+    async:
+      request-timeout: 900000
+    throw-exception-if-no-handler-found: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+    mapper:
+      accept-case-insensitive-enums: true
+    serialization:
+      write-dates-as-timestamps: false
+
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Flyway 数据库迁移
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    encoding: UTF-8
+    baseline-on-migrate: true
+
+  # Redis 配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+
+# 应用自定义配置
+app:
+  jwt:
+    secret: ${JWT_SECRET:b3B0bWluZC1qd3Qtc2VjcmV0LWtleS1mb3ItaG1hYy1zaGE1MTIteW91ci1zZWNyZXQta2V5LWxlbmd0aC1tdXN0LWJlLTUxMi1iaXRz}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+    issuer: ${JWT_ISSUER:ontologybuilder-platform}
+  # 默认租户ID
+  default-tenant-id: ${DEFAULT_TENANT_ID:default}
+# CORS配置
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+  allowed-headers: ${CORS_ALLOWED_HEADERS:*}
+
+# Springdoc / Swagger 配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+# Actuator 端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# 文件存储与上传配置
+file:
+  storage:
+    default-strategy: local
+    local:
+      base-dir: ${FILE_STORAGE_LOCAL_BASE_DIR:./storage}
+      public-url-prefix: ${FILE_STORAGE_LOCAL_PUBLIC_URL_PREFIX:}
+    minio:
+      endpoint: ${FILE_STORAGE_MINIO_ENDPOINT:http://localhost:9000}
+      access-key: ${FILE_STORAGE_MINIO_ACCESS_KEY:minioadmin}
+      secret-key: ${FILE_STORAGE_MINIO_SECRET_KEY:minioadmin}
+      bucket: ${FILE_STORAGE_MINIO_BUCKET:ontologybuilder-files}
+      region: ${FILE_STORAGE_MINIO_REGION:us-east-1}
+      secure: ${FILE_STORAGE_MINIO_SECURE:false}
+  upload:
+    dir: ${FILE_UPLOAD_DIR:./uploads}
+
+# 文件上传配置（兼容旧配置）
+upload:
+  dir: ${FILE_UPLOAD_DIR:./uploads}
+
+# Agent 服务配置
+agent:
+  base-url: ${AGENT_BASE_URL:http://localhost:8000}
+
+# AI Harbor 图谱服务（图谱资产评测数据源）
+graph:
+  harbor-url: ${GRAPH_HARBOR_URL:http://ai-harbor:3000}
+
+# Jena TDB2 三元组存储配置
+jena:
+  tdb2:
+    storage-path: ${JENA_TDB2_STORAGE_PATH:./storage/tdb2}
+
+# Fuseki SPARQL Endpoint 配置
+fuseki:
+  url: ${FUSEKI_URL:http://localhost:3030}
+  dataset: ${FUSEKI_DATASET:ontologybuilder}
+  # 内嵌 Fuseki Server 配置（与 TDB2 共享 Dataset，无需独立容器）
+  embedded:
+    enabled: ${FUSEKI_EMBEDDED_ENABLED:true}
+    port: ${FUSEKI_EMBEDDED_PORT:3030}
+
+# 图数据库配置（暂未启用，使用 Jena TDB2 + Pellet 进行语义推理）
+# HugeGraph 预留用于未来图遍历/图算法场景：
+# - 多跳关联查询（3+跳）
+# - 图中心度/影响力分析
+# - 基于图结构的相似度推荐
+# graph:
+#   hugegraph:
+#     url: ${HUGEGRAPH_URL:http://localhost:8081}
+#     graph-name: ${HUGEGRAPH_GRAPH_NAME:ontologybuilder}
+
+# MCP Server 配置（供 Hermes 等智能体调用）
+mcp:
+  server:
+    name: ontologybuilder-knowledge-base
+    version: 1.0.0
+    description: OntoMind 本体知识库 MCP Server
+    protocol-version: 2024-11-05
+  # 安全配置（生产环境建议启用）
+  security:
+    enabled: ${MCP_SECURITY_ENABLED:false}
+    api-key: ${MCP_API_KEY:}
+    header-name: X-API-Key
+  # 工具配置
+  tools:
+    sparql-enabled: true
+    sparql-max-limit: 1000
+    query-timeout-ms: 30000
+    disabled-tools: []
+
+# OxiRS 推理引擎配置
+oxirs:
+  enabled: ${OXIRS_ENABLED:true}
+  grpc:
+    host: ${OXIRS_GRPC_HOST:localhost}
+    port: ${OXIRS_GRPC_PORT:50052}
+    max-inbound-message-size: 10485760
+  fc:
+    enabled: ${OXIRS_FC_ENABLED:true}
+    engine: ${OXIRS_FC_ENGINE:jena}
+  bc:
+    enabled: ${OXIRS_BC_ENABLED:false}
+    timeout-ms: 500
+    max-depth: 10
+    promotion:
+      enabled: ${OXIRS_BC_PROMOTION_ENABLED:false}
+      threshold: ${OXIRS_BC_PROMOTION_THRESHOLD:100}
+  incremental:
+    enabled: ${OXIRS_INCREMENTAL_ENABLED:false}
+
+# NeSyS 符号验证器配置
+nesys:
+  enabled: ${NESYS_ENABLED:false}
+  max-correction-rounds: 3
+  strict-mode: ${NESYS_STRICT_MODE:false}
+
+# 安全配置（全局）
+security:
+  permit-all: ${SECURITY_PERMIT_ALL:true}
