@@ -7,6 +7,7 @@
 [![Frontend](https://img.shields.io/badge/frontend-React%2018%20%2B%20AntD%20%2B%20G6%20v5-61dafb)](web/)
 [![Server](https://img.shields.io/badge/server-Spring%20Boot%203%20%2B%20Jena%20%2B%20Pellet-009688)](server/)
 [![Reasoning](https://img.shields.io/badge/reasoner-SWRL%20builtins%20%2B%20consistency%20check-7c5cf6)](server/src/main/java/com/ontologybuilder/ontology/service/reasoning/)
+[![CI](https://github.com/wanshoulu/Ontology-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/wanshoulu/Ontology-builder/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 
 </div>
