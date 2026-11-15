@@ -1,3 +1,7 @@
+<p align="center">
+  <b>简体中文</b> · <a href="README.en.md">English</a>
+</p>
+
 <div align="center">
 
 # 🧩 Ontology Builder
@@ -11,14 +15,6 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 
 </div>
-
----
-
-### English
-
-**Ontology Builder** is an AI-native ontology modeling workbench: feed documents or schemas to an AI extraction wizard, refine in a Protégé-style editor, enforce standards with SHACL/SKOS, encode logic as SWRL rules, run consistency reasoning (Pellet/Openllet + custom SWRL builtins), instantiate via RML mapping, and explore instances as an interactive graph (SPARQL + G6). Versioned, OWL/TTL import-export ready, with a self-contained Spring Boot 3 + Jena server.
-
-> 中文文档见下。
 
 ---
 **Ontology Builder** 是一个 AI 原生的本体（Ontology）建模工作台：把文档、表结构喂给 AI 抽取向导生成本体草稿，专家在 Protégé 风格编辑器里精修，用 SHACL/SKOS/SWRL 固化标准与规则，跑一致性推理校验，再经 RML 映射实例化到 RDF 存储，最后用 SPARQL + G6 图谱可视化浏览。
